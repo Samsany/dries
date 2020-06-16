@@ -36,7 +36,6 @@ public class JwtTokenUtil {
      */
     private String generateToken(Map<String, Object> claims) {
 
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -49,11 +48,8 @@ public class JwtTokenUtil {
      * 从token中获取JWT中的负载
      */
     private Claims getClaimsFromToken(String token) {
-
         Claims claims = null;
-
         try {
-
             claims = Jwts.parser()
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
@@ -77,19 +73,12 @@ public class JwtTokenUtil {
      * 从token中获取登录用户名
      */
     public String getUserNameFromToken(String token) {
-
         String username;
-
         try {
-
             Claims claims = getClaimsFromToken(token);
-
             username = claims.getSubject();
-
         } catch (Exception e) {
-
             username = null;
-
         }
 
         return username;
@@ -102,11 +91,8 @@ public class JwtTokenUtil {
      * @param userDetails 从数据库中查询出来的用户信息
      */
     public boolean validateToken(String token, UserDetails userDetails) {
-
         String username = getUserNameFromToken(token);
-
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-
     }
 
 
@@ -114,11 +100,8 @@ public class JwtTokenUtil {
      * 判断token是否已经失效
      */
     private boolean isTokenExpired(String token) {
-
         Date expiredDate = getExpiredDateFromToken(token);
-
         return expiredDate.before(new Date());
-
     }
 
 
@@ -126,11 +109,8 @@ public class JwtTokenUtil {
      * 从token中获取过期时间
      */
     private Date getExpiredDateFromToken(String token) {
-
         Claims claims = getClaimsFromToken(token);
-
         return claims.getExpiration();
-
     }
 
 
@@ -138,15 +118,10 @@ public class JwtTokenUtil {
      * 根据用户信息生成token
      */
     public String generateToken(UserDetails userDetails) {
-
         Map<String, Object> claims = new HashMap<>();
-
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-
         claims.put(CLAIM_KEY_CREATED, new Date());
-
         return generateToken(claims);
-
     }
 
 
@@ -154,9 +129,7 @@ public class JwtTokenUtil {
      * 判断token是否可以被刷新
      */
     public boolean canRefresh(String token) {
-
         return !isTokenExpired(token);
-
     }
 
 
@@ -164,11 +137,8 @@ public class JwtTokenUtil {
      * 刷新token
      */
     public String refreshToken(String token) {
-
         Claims claims = getClaimsFromToken(token);
-
         claims.put(CLAIM_KEY_CREATED, new Date());
-
         return generateToken(claims);
     }
 
