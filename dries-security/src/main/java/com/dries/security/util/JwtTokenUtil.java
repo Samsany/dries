@@ -3,6 +3,7 @@ package com.dries.security.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,17 +17,17 @@ import java.util.Map;
  * @Author ZSY
  * @createTime 2020/6/16 18:42
  */
-@Component
 @Slf4j
+@Data
+@Component
 public class JwtTokenUtil {
 
-    private static final String CLAIM_KEY_USERNAME = "sub";
+    private static final String CLAIM_KEY_USERNAME = "sam";
 
     private static final String CLAIM_KEY_CREATED = "created";
 
     @Value("${jwt.secret}")
     private String secret;
-
 
     @Value("${jwt.expiration}")
     private Long expiration;
