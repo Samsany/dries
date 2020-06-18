@@ -5,6 +5,7 @@ import com.dries.admin.entity.UmsAdminEntity;
 import com.dries.admin.entity.UmsPermissionEntity;
 import com.dries.admin.form.AdminRegisterFrom;
 import com.dries.common.api.CommonResult;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -46,5 +47,6 @@ public interface UmsAdminService extends IService<UmsAdminEntity> {
      */
     CommonResult<UmsAdminEntity> getAdminByUsername(String username);
 
+    UserDetails loadUserByUsername(String username);
 }
 

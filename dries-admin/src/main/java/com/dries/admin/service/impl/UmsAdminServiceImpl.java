@@ -1,5 +1,6 @@
 package com.dries.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,6 +8,7 @@ import com.dries.admin.dao.UmsAdminDao;
 import com.dries.admin.dao.UmsAdminRoleRelationDao;
 import com.dries.admin.entity.UmsAdminEntity;
 import com.dries.admin.entity.UmsPermissionEntity;
+import com.dries.admin.entity.UmsResourceEntity;
 import com.dries.admin.form.AdminRegisterFrom;
 import com.dries.admin.service.UmsAdminService;
 import com.dries.common.api.CommonResult;
@@ -15,7 +17,6 @@ import com.dries.common.exception.ApiException;
 import com.dries.security.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,9 +45,10 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
     private UserDetailsService userDetailsService;
 
     @Resource
+    private UmsAdminCache
+
+    @Resource
     private JwtTokenUtil jwtTokenUtil;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -138,5 +140,35 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
         }
 
         return CommonResult.failed();
+    }
+
+    /**
+     * 根据用户名获取用户信息
+     * @param username
+     * @return
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+
+        UmsAdminEntity admin = getAdminByUsername(username).getData();
+
+        if (admin != null) {
+            List<UmsResourceEntity> resources = getResourceList(admin.getId());
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<UmsResourceEntity> getResourceList(Long adminId) {
+        List<UmsResourceEntity> resourceList = adminCacheService.getResourceList(adminId);
+        if(CollUtil.isNotEmpty(resourceList)){
+            return  resourceList;
+        }
+        resourceList = adminRoleRelationDao.getResourceList(adminId);
+        if(CollUtil.isNotEmpty(resourceList)){
+            adminCacheService.setResourceList(adminId,resourceList);
+        }
+        return resourceList;
     }
 }
