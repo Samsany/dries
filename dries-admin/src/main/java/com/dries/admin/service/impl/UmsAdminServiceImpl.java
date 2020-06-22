@@ -10,6 +10,7 @@ import com.dries.admin.entity.UmsAdminEntity;
 import com.dries.admin.entity.UmsPermissionEntity;
 import com.dries.admin.entity.UmsResourceEntity;
 import com.dries.admin.form.AdminRegisterFrom;
+import com.dries.admin.service.UmsAdminCacheService;
 import com.dries.admin.service.UmsAdminService;
 import com.dries.common.api.CommonResult;
 import com.dries.common.api.ResultCode;
@@ -45,7 +46,7 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
     private UserDetailsService userDetailsService;
 
     @Resource
-    private UmsAdminCache
+    private UmsAdminCacheService adminCacheService;
 
     @Resource
     private JwtTokenUtil jwtTokenUtil;
