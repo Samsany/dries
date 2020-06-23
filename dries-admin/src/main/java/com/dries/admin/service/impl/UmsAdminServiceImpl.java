@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dries.admin.bo.AdminUserDetails;
 import com.dries.admin.dao.UmsAdminDao;
 import com.dries.admin.dao.UmsAdminRoleRelationDao;
 import com.dries.admin.entity.UmsAdminEntity;
@@ -23,6 +24,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -155,9 +157,10 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
 
         if (admin != null) {
             List<UmsResourceEntity> resources = getResourceList(admin.getId());
+            return new AdminUserDetails(admin, resources);
         }
 
-        return null;
+        throw new UsernameNotFoundException("用户名或密码错误");
     }
 
     @Override

@@ -97,6 +97,7 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     @Override
     public void delResourceListByRoleIds(List<Long> roleIds) {
         List<UmsAdminRoleRelationEntity> list = new LambdaQueryChainWrapper<>(adminRoleRelationDao)
+                .in(UmsAdminRoleRelationEntity::getRoleId, roleIds)
                 .list();
     }
 
@@ -107,6 +108,12 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
      */
     @Override
     public void delResourceListByResource(Long resourceId) {
+        List<Long> adminIdList = adminRoleRelationDao.getAdminIdList(resourceId);
+        if (CollUtil.isNotEmpty(adminIdList)) {
+            String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
+            List<String> keys = adminIdList.stream().map(adminId -> keyPrefix + adminId).collect(Collectors.toList());
+            redisService.del(keys);
+        }
 
     }
 
@@ -117,7 +124,8 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
      */
     @Override
     public UmsAdminEntity getAdmin(String username) {
-        return null;
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + username;
+        return (UmsAdminEntity) redisService.get(key);
     }
 
     /**
@@ -127,7 +135,8 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
      */
     @Override
     public void setAdmin(UmsAdminEntity admin) {
-
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + admin.getUsername();
+        redisService.set(key, admin, REDIS_EXPIRE);
     }
 
     /**
@@ -137,7 +146,8 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
      */
     @Override
     public List<UmsResourceEntity> getResourceList(Long adminId) {
-        return null;
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        return (List<UmsResourceEntity>) redisService.get(key);
     }
 
     /**
@@ -148,6 +158,7 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
      */
     @Override
     public void setResourceList(Long adminId, List<UmsResourceEntity> resourceList) {
-
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        redisService.set(key, resourceList, REDIS_EXPIRE);
     }
 }

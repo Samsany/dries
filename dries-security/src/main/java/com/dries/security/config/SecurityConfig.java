@@ -2,6 +2,7 @@ package com.dries.security.config;
 
 import com.dries.security.component.*;
 import com.dries.security.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +26,9 @@ import javax.annotation.Resource;
  * SpringSecurity的配置
  * @Author ZSY
  */
-
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Resource
+    @Autowired(required = false)
     private DynamicSecurityService dynamicSecurityService;
 
     @Override

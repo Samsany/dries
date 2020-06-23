@@ -3,6 +3,7 @@ package com.dries.admin.dao;
 import com.dries.admin.entity.UmsAdminRoleRelationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dries.admin.entity.UmsPermissionEntity;
+import com.dries.admin.entity.UmsResourceEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -18,4 +19,8 @@ import java.util.List;
 public interface UmsAdminRoleRelationDao extends BaseMapper<UmsAdminRoleRelationEntity> {
 
     List<UmsPermissionEntity> getPermissionList(Long adminId);
+
+    List<Long> getAdminIdList(Long resourceId);
+
+    List<UmsResourceEntity> getResourceList(Long adminId);
 }

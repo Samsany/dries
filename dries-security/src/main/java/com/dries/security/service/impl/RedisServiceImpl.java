@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @Author ZSY
  * @createTime 2020/6/22 16:53
  */
-@Service
+@Service("redisService")
 public class RedisServiceImpl implements RedisService {
 
     @Resource

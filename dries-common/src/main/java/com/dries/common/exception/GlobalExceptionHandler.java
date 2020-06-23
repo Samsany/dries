@@ -1,6 +1,7 @@
 package com.dries.common.exception;
 
 import com.dries.common.api.CommonResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,7 @@ import java.util.Objects;
  * @date: 2020/6/16 23:46
  */
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ResponseBody
@@ -36,7 +38,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public CommonResult handleNotValidException(MethodArgumentNotValidException e){
         BindingResult bindingResult = e.getBindingResult();
-        return CommonResult.failed(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+
+        return CommonResult.failed(
+                Objects.requireNonNull(bindingResult.getFieldError()).getField()
+                        + bindingResult.getFieldError().getDefaultMessage());
     }
 
 }

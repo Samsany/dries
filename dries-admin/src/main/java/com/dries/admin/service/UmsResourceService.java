@@ -12,6 +12,9 @@ import com.dries.admin.entity.UmsResourceEntity;
  */
 public interface UmsResourceService extends IService<UmsResourceEntity> {
 
-
+    /**
+     * 添加资源
+     */
+    int create(UmsResourceEntity umsResource);
 }
 

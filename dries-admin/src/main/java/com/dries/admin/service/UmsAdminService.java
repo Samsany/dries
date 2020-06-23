@@ -3,6 +3,7 @@ package com.dries.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dries.admin.entity.UmsAdminEntity;
 import com.dries.admin.entity.UmsPermissionEntity;
+import com.dries.admin.entity.UmsResourceEntity;
 import com.dries.admin.form.AdminRegisterFrom;
 import com.dries.common.api.CommonResult;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +40,11 @@ public interface UmsAdminService extends IService<UmsAdminEntity> {
      * @return
      */
     List<UmsPermissionEntity> getPermissions(Long adminId);
+
+    /**
+     * 获取指定用户的可访问资源
+     */
+    List<UmsResourceEntity> getResourceList(Long adminId);
 
     /**
      * 根据用户名获取后台管理员

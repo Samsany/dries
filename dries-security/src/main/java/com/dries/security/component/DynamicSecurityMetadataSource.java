@@ -1,6 +1,7 @@
 package com.dries.security.component;
 
 import cn.hutool.core.util.URLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -19,7 +20,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     private static Map<String, ConfigAttribute> configAttributeMap = null;
 
-    @Resource
+    @Autowired(required = false)
     private DynamicSecurityService dynamicSecurityService;
 
     @PostConstruct
