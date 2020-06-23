@@ -23,7 +23,8 @@ spring:
 
 logging:
   level:
-    root: info
+    root: info # 日志配置DEBUG,INFO,WARN,ERROR
+    com.dries: debug
 
 # 打印sql
 mybatis-plus:
