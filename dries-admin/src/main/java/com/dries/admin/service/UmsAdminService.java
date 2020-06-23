@@ -32,7 +32,7 @@ public interface UmsAdminService extends IService<UmsAdminEntity> {
      * @param password
      * @return
      */
-    String login(String username, String password);
+    CommonResult login(String username, String password);
 
     /**
      * 获取用户所有权限（包括角色权限和 +- 权限）

@@ -56,6 +56,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
             }
         }
 
+        //  此处会调用AccessDecisionManager中的decide方法进行鉴权操作
         InterceptorStatusToken token = super.beforeInvocation(fi);
 
         try {

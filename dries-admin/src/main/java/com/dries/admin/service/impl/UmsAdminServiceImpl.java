@@ -19,6 +19,7 @@ import com.dries.common.exception.ApiException;
 import com.dries.security.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -55,6 +58,12 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
 
     @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     /**
      * admin 注册
@@ -95,9 +104,10 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
      * @return
      */
     @Override
-    public String login(String username, String password) {
+    public CommonResult login(String username, String password) {
 
-        String token = null;
+        String token;
+
         try {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -108,10 +118,21 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminDao, UmsAdminEntity
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             token = jwtTokenUtil.generateToken(userDetails);
 
+            if (token == null) {
+                return CommonResult.failed(ResultCode.LOGIN_FAILED);
+            }
+
+            Map<String, String> map = new HashMap<>();
+            map.put("token",token);
+            map.put("tokenHead",tokenHead);
+
+            return CommonResult.success(map);
+
         } catch (AuthenticationException e) {
             log.warn("【登录异常：{}】", e.getMessage());
+            return CommonResult.failed(ResultCode.LOGIN_FAILED);
         }
-        return token;
+
     }
 
     /**
